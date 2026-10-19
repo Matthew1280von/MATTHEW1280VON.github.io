@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ONYX | My Hub</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
     body {
       margin: 0;
       min-height: 100vh;
@@ -16,7 +18,13 @@
       font-family: Arial, sans-serif;
     }
     main { width: min(90%, 760px); text-align: center; }
-    h1 { letter-spacing: 5px; }
+    h1 {
+      font-family: 'Pacifico', 'Segoe Print', 'Bradley Hand', cursive;
+      letter-spacing: 2px;
+      font-size: clamp(3rem, 7vw, 5rem);
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
     input {
       box-sizing: border-box;
       width: 100%;
