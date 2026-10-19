@@ -58,10 +58,27 @@
       <a href="https://www.coolmathgames.com/">Games</a>
       <a href="https://www.wikipedia.org/">Explore</a>
       <a href="https://www.google.com/">Google</a>
-      <a href="https://github.com/">My Projects</a>
+      <a href="https://github.com/" id="projectsLink">My Projects</a>
       <a href="movies.html">Movies</a>
       <a href="https://www.nasa.gov/">Discover</a>
     </div>
   </main>
+
+  <script>
+    const projectsLink = document.getElementById('projectsLink');
+    const correctPassword = '20140227';
+
+    projectsLink.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      const enteredPassword = prompt('Enter password to access My Projects');
+
+      if (enteredPassword === correctPassword) {
+        window.location.href = 'https://github.com/';
+      } else {
+        alert('Incorrect password. Access denied.');
+      }
+    });
+  </script>
 </body>
 </html>
