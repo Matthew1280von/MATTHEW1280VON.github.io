@@ -38,6 +38,38 @@
       font-size: 1.1rem;
       line-height: 1.6;
       margin-bottom: 20px;
+      white-space: pre-wrap;
+    }
+    .admin-box {
+      display: none;
+      margin-bottom: 18px;
+      background: #111111;
+      border: 1px solid #444;
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .admin-box.visible {
+      display: block;
+    }
+    textarea {
+      width: 100%;
+      min-height: 140px;
+      resize: vertical;
+      box-sizing: border-box;
+      border-radius: 12px;
+      border: 1px solid #555;
+      background: #1c1c1c;
+      color: white;
+      padding: 14px;
+      font-size: 1rem;
+      font-family: Arial, sans-serif;
+    }
+    .toolbar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
     }
     .actions {
       display: flex;
@@ -46,33 +78,106 @@
       flex-wrap: wrap;
       margin-top: 18px;
     }
-    a {
-      display: inline-block;
-      padding: 14px 20px;
+    button, a {
+      border: 1px solid #444;
       border-radius: 12px;
+      padding: 12px 18px;
       text-decoration: none;
       color: white;
       background: #2b2b2b;
-      border: 1px solid #444;
       font-weight: 600;
+      cursor: pointer;
+      font-size: 0.95rem;
     }
-    a.primary {
+    .primary {
       background: #ff9800;
       border-color: #ff9800;
       color: #1a1000;
+    }
+    .danger {
+      background: #7a1d1d;
+      border-color: #8f2d2d;
+    }
+    .small {
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      margin-left: auto;
     }
   </style>
 </head>
 <body>
   <div class="card">
     <h1>NEWS & HELP</h1>
-    <div class="alert">
-      NEWS: welcome to onyx! DO NOT SHARE THIS WITH ANYONE!! sadly.. the movies page is currently under construction. Please feel free to try any other page!
+
+    <div class="alert" id="newsText">NEWS: welcome to onyx! DO NOT SHARE THIS WITH ANYONE!! sadly.. the movies page is currently under construction. Please feel free to try any other page!</div>
+
+    <div class="admin-box" id="adminBox">
+      <textarea id="editorArea" aria-label="Edit news text"></textarea>
+      <div class="toolbar">
+        <button type="button" class="primary" id="saveBtn">Save</button>
+        <button type="button" class="danger" id="deleteBtn">Delete text</button>
+      </div>
     </div>
+
     <div class="actions">
+      <button type="button" class="small" id="adminBtn">admin edit</button>
       <a class="primary" href="index.html">Back to hub</a>
       <a href="tiktok.html">Try TikTok</a>
     </div>
   </div>
+
+  <script>
+    const STORAGE_KEY = 'onyxNewsText';
+    const DEFAULT_TEXT = 'NEWS: welcome to onyx! DO NOT SHARE THIS WITH ANYONE!! sadly.. the movies page is currently under construction. Please feel free to try any other page!';
+
+    const newsText = document.getElementById('newsText');
+    const adminBtn = document.getElementById('adminBtn');
+    const adminBox = document.getElementById('adminBox');
+    const editorArea = document.getElementById('editorArea');
+    const saveBtn = document.getElementById('saveBtn');
+    const deleteBtn = document.getElementById('deleteBtn');
+
+    function loadNews() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      const text = saved !== null ? saved : DEFAULT_TEXT;
+      newsText.textContent = text;
+    }
+
+    function saveNews(value) {
+      const cleaned = value.trim();
+      localStorage.setItem(STORAGE_KEY, cleaned);
+      newsText.textContent = cleaned || 'No news yet.';
+    }
+
+    adminBtn.addEventListener('click', function () {
+      const password = prompt('Enter admin password');
+      const correctPassword = '20140227';
+
+      if (password === correctPassword) {
+        editorArea.value = newsText.textContent;
+        adminBox.classList.add('visible');
+      } else {
+        alert('Incorrect password. Access denied.');
+      }
+    });
+
+    saveBtn.addEventListener('click', function () {
+      const value = editorArea.value;
+      saveNews(value);
+      adminBox.classList.remove('visible');
+    });
+
+    deleteBtn.addEventListener('click', function () {
+      const confirmed = confirm('Delete the current news text?');
+      if (!confirmed) return;
+
+      localStorage.setItem(STORAGE_KEY, '');
+      newsText.textContent = 'No news yet.';
+      editorArea.value = '';
+      adminBox.classList.remove('visible');
+    });
+
+    loadNews();
+  </script>
 </body>
 </html>
