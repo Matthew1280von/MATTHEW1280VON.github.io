@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ONYX | My Hub</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #090909;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    main { width: min(90%, 600px); text-align: center; }
+    h1 { letter-spacing: 5px; }
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid #333;
+      background: #171717;
+      color: white;
+      font-size: 16px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+    a {
+      padding: 22px 8px;
+      background: #171717;
+      border: 1px solid #333;
+      border-radius: 14px;
+      color: white;
+      text-decoration: none;
+    }
+    a:hover { background: #292929; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>ONYX</h1>
+    <p>Your personal web hub</p>
+
+    <form action="https://www.google.com/search" method="get">
+      <input name="q" placeholder="Search the web..." />
+    </form>
+
+    <div class="grid">
+      <a href="https://www.youtube.com/">YouTube</a>
+      <a href="https://www.coolmathgames.com/">Games</a>
+      <a href="https://www.wikipedia.org/">Explore</a>
+      <a href="https://www.google.com/">Google</a>
+      <a href="https://github.com/">My Projects</a>
+      <a href="https://www.nasa.gov/">Discover</a>
+    </div>
+  </main>
+</body>
+</html>
