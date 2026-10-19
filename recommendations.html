@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ONYX | Recommendations</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top, #1a1a1a, #090909 60%);
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 30px 10px;
+    }
+
+    .card {
+      width: min(92%, 860px);
+      background: rgba(23, 23, 23, 0.9);
+      border: 1px solid #333;
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      text-align: center;
+      letter-spacing: 4px;
+      font-size: clamp(2rem, 5vw, 3rem);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #d0d0d0;
+      margin-bottom: 24px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      color: #f0f0f0;
+      font-size: 0.95rem;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid #555;
+      background: #141414;
+      color: white;
+      font-size: 1rem;
+      font-family: Arial, sans-serif;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button, a {
+      display: inline-block;
+      border: 1px solid #444;
+      border-radius: 12px;
+      padding: 12px 18px;
+      text-decoration: none;
+      color: white;
+      background: #2b2b2b;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    button.primary {
+      background: #5b9cff;
+      border-color: #5b9cff;
+    }
+
+    .list {
+      background: #121212;
+      border: 1px solid #333;
+      border-radius: 14px;
+      padding: 16px;
+      min-height: 280px;
+    }
+
+    .list h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+    }
+
+    .recommendation-item {
+      background: #191919;
+      border: 1px solid #3a3a3a;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-top: 12px;
+    }
+
+    .recommendation-item strong {
+      color: #dfe8ff;
+    }
+
+    .recommendation-item small {
+      color: #bbb;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .empty {
+      color: #b2b2b2;
+      margin-top: 12px;
+      font-style: italic;
+    }
+
+    @media (max-width: 760px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>RECOMMENDATIONS</h1>
+    <p class="subtitle">Send ideas for the site from any account and help make ONYX better.</p>
+
+    <div class="layout">
+      <form id="recommendationForm">
+        <label>
+          Name
+          <input type="text" id="name" placeholder="Your name" required>
+        </label>
+
+        <label>
+          Account / Social Handle
+          <input type="text" id="account" placeholder="@username or account name" required>
+        </label>
+
+        <label>
+          Category
+          <select id="category">
+            <option value="General">General</option>
+            <option value="Games">Games</option>
+            <option value="Videos">Videos</option>
+            <option value="Sites">Sites</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+
+        <label>
+          Recommendation
+          <textarea id="message" placeholder="Tell us what to add to the website..." required></textarea>
+        </label>
+
+        <div class="actions">
+          <a href="index.html">Back to hub</a>
+          <button type="submit" class="primary">Submit</button>
+        </div>
+      </form>
+
+      <div class="list">
+        <h2>Submitted Ideas</h2>
+        <div id="recommendationsList"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'onyxRecommendations';
+    const form = document.getElementById('recommendationForm');
+    const list = document.getElementById('recommendationsList');
+
+    function loadRecommendations() {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      return saved;
+    }
+
+    function saveRecommendations(recommendations) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(recommendations));
+    }
+
+    function renderRecommendations() {
+      const recommendations = loadRecommendations();
+
+      if (!recommendations.length) {
+        list.innerHTML = '<div class="empty">No recommendations yet. Be the first to add one.</div>';
+        return;
+      }
+
+      list.innerHTML = recommendations
+        .slice()
+        .reverse()
+        .map(item => `
+          <div class="recommendation-item">
+            <small>${item.category} • ${item.account}</small>
+            <strong>${item.name}</strong>
+            <p>${item.message}</p>
+          </div>
+        `)
+        .join('');
+    }
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const account = document.getElementById('account').value.trim();
+      const category = document.getElementById('category').value;
+      const message = document.getElementById('message').value.trim();
+
+      if (!name || !account || !message) return;
+
+      const recommendations = loadRecommendations();
+      recommendations.push({
+        name,
+        account,
+        category,
+        message,
+        date: new Date().toISOString()
+      });
+
+      saveRecommendations(recommendations);
+      renderRecommendations();
+      form.reset();
+    });
+
+    renderRecommendations();
+  </script>
+</body>
+</html>
